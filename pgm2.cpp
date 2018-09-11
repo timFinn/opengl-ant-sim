@@ -23,40 +23,58 @@ int x_offset;
 int y_offset;
 bool start_flag;
 
-void DrawAnt(int init_x, int init_y)
+void DrawAnt(int init_x, int init_y)			// Ant is drawn from the center of its thorax
 {
 	glColor3f(0.0, 0.0, 0.0);
-	glPushMatrix();
+	glPushMatrix();								// Body segment 1 - Abdomen
+		glTranslated(init_x-60.0, init_y, 0.0);
+    	glutWireSphere(25.0, 10, 10);
+    glPopMatrix();
+
+    glBegin(GL_LINE_STRIP);						// Abdomen leg segment
+    	glVertex3f(init_x-100.0, init_y+30.0, 0.0);
+    	glVertex3f(init_x-60.0, init_y, 0.0);
+    	glVertex3f(init_x-100.0, init_y-30.0, 0.0);
+    glEnd();
+
+    glBegin(GL_LINES);							// Joining segment
+    	glVertex3f(init_x-25.0, init_y, 0.0);
+    	glVertex3f(init_x-35.0, init_y, 0.0);
+    glEnd();
+
+	glPushMatrix();								// Body segment 2 - Thorax
 		glTranslated(init_x, init_y, 0.0);
     	glutWireSphere(25.0, 10, 10);
     glPopMatrix();
 
-    glBegin(GL_LINES);
+    glBegin(GL_LINE_STRIP);							// Thorax leg segment
+    	glVertex3f(init_x, init_y+55.0, 0.0);
+    	glVertex3f(init_x, init_y, 0.0);
+    	glVertex3f(init_x, init_y-55.0, 0.0);
+    glEnd();
+
+    glBegin(GL_LINES);							// Joining segment
     	glVertex3f(init_x+25.0, init_y, 0.0);
     	glVertex3f(init_x+35.0, init_y, 0.0);
     glEnd();
 
-	glPushMatrix();
-		glTranslated(init_x+60, init_y, 0.0);
+    glPushMatrix();								// Body segment 3 - Head
+		glTranslated(init_x+60.0, init_y, 0.0);
     	glutWireSphere(25.0, 10, 10);
     glPopMatrix();
 
-    glBegin(GL_LINES);
-    	glVertex3f(init_x+85.0, init_y, 0.0);
-    	glVertex3f(init_x+95.0, init_y, 0.0);
+    glBegin(GL_LINE_STRIP);						// Head leg segment
+    	glVertex3f(init_x+100.0, init_y+30.0, 0.0);
+    	glVertex3f(init_x+60.0, init_y, 0.0);
+    	glVertex3f(init_x+100.0, init_y-30.0, 0.0);
     glEnd();
-
-    glPushMatrix();
-		glTranslated(init_x+120, init_y, 0.0);
-    	glutWireSphere(25.0, 10, 10);
-    glPopMatrix();    
 }
 
 void DisplayEventHandler()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    DrawAnt(100 + x_offset, canvas_Height - 50);
+    DrawAnt(canvas_Width/2 + x_offset, canvas_Height/2 + y_offset);
 
     glFlush();
 }
