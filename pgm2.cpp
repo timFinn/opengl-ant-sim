@@ -14,80 +14,91 @@
 
 #include "my_setup_3D_18.h"
 
-#define canvas_Width 480
-#define canvas_Height 480
+#define canvas_Width 640
+#define canvas_Height 640
 #define canvas_Name "CS 445 - Program 2"
 #define PI 3.14159265359
 
 int x_offset;
+int y_offset;
 bool start_flag;
 
-void drawGoose(int init_x, int init_y)
+void DrawAnt(int init_x, int init_y)
 {
-    glBegin(GL_LINE_LOOP);
-      glColor3f(0.0, 0.0, 0.0);
-      glVertex2i(init_x, init_y);
-      glVertex2i(init_x + 60, init_y); // head
-      glVertex2i(init_x, init_y);
-      glVertex2i(init_x - 40, init_y + 40); // top wing
-      glVertex2i(init_x, init_y);
-      glVertex2i(init_x - 40, init_y - 40); // bottom wing
-      glVertex2i(init_x, init_y);
-      glVertex2i(init_x - 40, init_y); // tail
+	glColor3f(0.0, 0.0, 0.0);
+	glPushMatrix();
+		glTranslated(init_x, init_y, 0.0);
+    	glutWireSphere(25.0, 10, 10);
+    glPopMatrix();
+
+    glBegin(GL_LINES);
+    	glVertex3f(init_x+25.0, init_y, 0.0);
+    	glVertex3f(init_x+35.0, init_y, 0.0);
     glEnd();
+
+	glPushMatrix();
+		glTranslated(init_x+60, init_y, 0.0);
+    	glutWireSphere(25.0, 10, 10);
+    glPopMatrix();
+
+    glBegin(GL_LINES);
+    	glVertex3f(init_x+85.0, init_y, 0.0);
+    	glVertex3f(init_x+95.0, init_y, 0.0);
+    glEnd();
+
+    glPushMatrix();
+		glTranslated(init_x+120, init_y, 0.0);
+    	glutWireSphere(25.0, 10, 10);
+    glPopMatrix();    
 }
 
 void DisplayEventHandler()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    drawGoose(100 + x_offset, canvas_Height - 50);
-    drawGoose(100 + x_offset, canvas_Height  - 150);
-    drawGoose(240 + x_offset, canvas_Height -75);
-
-    drawCloud((canvas_Width - 50) - (x_offset/2), 100, 20);
-    drawCloud((canvas_Width - 150) - (x_offset/3), 200, 20);
-    drawCloud((canvas_Width - 175) - (x_offset/3), 50, 20);
-    drawCloud((canvas_Width - 200) - (x_offset/2), 150, 20);
+    DrawAnt(100 + x_offset, canvas_Height - 50);
 
     glFlush();
 }
 
 void TimerEventHandler(int ID)
 {
-    x_offset += 10;
-
-    if (x_offset == 50 || x_offset == 150 || x_offset == 250 || x_offset == 350)
-    {
-    	display_func2();
-    }
-    else
-    {
-    	display_func();
-    }
+    DisplayEventHandler();
     
-    glutTimerFunc(100, timer_func, 1);
+    glutTimerFunc(100, TimerEventHandler, 1);
 }
 
 void KeyboardEventHandler(unsigned char key, int x, int y)
 {    
 	if (start_flag == false)
 	{
-		glutTimerFunc(100, timer_func, 1);
+		glutTimerFunc(100, TimerEventHandler, 1);
 		start_flag = true;
 	}    
     else
     {
-    	if (key == 'r')
+    	if (key == 'h')
     	{
     		x_offset = 0;
     	}    	
+    	else if (key == 'j')
+    	{
+    		x_offset = 0;
+    	}
+    	else if (key == 'u')
+    	{
+    		x_offset = 0;
+    	}
+    	else if (key == 'n')
+    	{
+    		x_offset = 0;
+    	}
     }
 }
 
-void initRendering()
+void InitRendering()
 {
-    glClearColor(1.0, 1.0, 1.0, 1.0);	// set background to white
+    glClearColor(0.5, 1.0, 0.5, 1.0);	// set background to white
     glLineWidth(1.0);					// set line width to 1
 }
 
@@ -98,7 +109,7 @@ int main (int argc, char ** argv)
 
     glutInit(&argc, argv);    
     my_setup(canvas_Width, canvas_Height, canvas_Name);
-    initRendering();   
+    InitRendering();   
 
     glutDisplayFunc(DisplayEventHandler);
     glutKeyboardFunc(KeyboardEventHandler);
