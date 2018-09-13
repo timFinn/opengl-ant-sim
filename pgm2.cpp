@@ -19,11 +19,11 @@
 #define canvas_Name "CS 445 - Program 2"
 #define PI 3.14159265359
 
-int x_offset;
-int y_offset;
+float x_offset;
+float y_offset;
 bool start_flag;
 
-void DrawAnt(int init_x, int init_y)			// Ant is drawn from the center of its thorax
+void DrawAnt(float init_x, float init_y)		// Ant is drawn from the center of its thorax
 {
 	glColor3f(0.0, 0.0, 0.0);
 	glPushMatrix();								// Body segment 1 - Abdomen
@@ -70,11 +70,22 @@ void DrawAnt(int init_x, int init_y)			// Ant is drawn from the center of its th
     glEnd();
 }
 
+void DrawFood(float init_x, float init_y)
+{
+	glColor3f(0.0, 0.0, 0.0);
+	glPushMatrix();								// FOOD Cube
+		glTranslated(init_x, init_y+100.0, 0.0);
+    	glutWireCube(40.0);
+    glPopMatrix();
+}
+
 void DisplayEventHandler()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
     DrawAnt(canvas_Width/2 + x_offset, canvas_Height/2 + y_offset);
+
+	DrawFood(canvas_Width/2 + x_offset, canvas_Height/2 + y_offset);    
 
     glFlush();
 }
