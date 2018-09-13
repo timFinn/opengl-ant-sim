@@ -23,59 +23,59 @@ float x_offset;
 float y_offset;
 bool start_flag;
 
-void DrawAnt(float init_x, float init_y)		// Ant is drawn from the center of its thorax
+void DrawAnt(float init_x, float init_y, float init_z)		// Ant is drawn from the center of its thorax
 {
 	glColor3f(0.0, 0.0, 0.0);
-	glPushMatrix();								// Body segment 1 - Abdomen
-		glTranslated(init_x-60.0, init_y, 0.0);
+	glPushMatrix();											// Body segment 1 - Abdomen
+		glTranslated(init_x-60.0, init_y, init_z);
     	glutWireSphere(25.0, 10, 10);
     glPopMatrix();
 
-    glBegin(GL_LINE_STRIP);						// Abdomen leg segment
-    	glVertex3f(init_x-100.0, init_y+30.0, 0.0);
-    	glVertex3f(init_x-60.0, init_y, 0.0);
-    	glVertex3f(init_x-100.0, init_y-30.0, 0.0);
+    glBegin(GL_LINE_STRIP);									// Abdomen leg segment
+    	glVertex3f(init_x-100.0, init_y+30.0, init_z);
+    	glVertex3f(init_x-60.0, init_y, init_z);
+    	glVertex3f(init_x-100.0, init_y-30.0, init_z);
     glEnd();
 
-    glBegin(GL_LINES);							// Joining segment
-    	glVertex3f(init_x-25.0, init_y, 0.0);
-    	glVertex3f(init_x-35.0, init_y, 0.0);
+    glBegin(GL_LINES);										// Joining segment
+    	glVertex3f(init_x-25.0, init_y, init_z);
+    	glVertex3f(init_x-35.0, init_y, init_z);
     glEnd();
 
-	glPushMatrix();								// Body segment 2 - Thorax
-		glTranslated(init_x, init_y, 0.0);
+	glPushMatrix();											// Body segment 2 - Thorax
+		glTranslated(init_x, init_y, init_z);
     	glutWireSphere(25.0, 10, 10);
     glPopMatrix();
 
-    glBegin(GL_LINE_STRIP);							// Thorax leg segment
-    	glVertex3f(init_x, init_y+55.0, 0.0);
-    	glVertex3f(init_x, init_y, 0.0);
-    	glVertex3f(init_x, init_y-55.0, 0.0);
+    glBegin(GL_LINE_STRIP);									// Thorax leg segment
+    	glVertex3f(init_x, init_y+55.0, init_z);
+    	glVertex3f(init_x, init_y, init_z);
+    	glVertex3f(init_x, init_y-55.0, init_z);
     glEnd();
 
-    glBegin(GL_LINES);							// Joining segment
-    	glVertex3f(init_x+25.0, init_y, 0.0);
-    	glVertex3f(init_x+35.0, init_y, 0.0);
+    glBegin(GL_LINES);										// Joining segment
+    	glVertex3f(init_x+25.0, init_y, init_z);
+    	glVertex3f(init_x+35.0, init_y, init_z);
     glEnd();
 
-    glPushMatrix();								// Body segment 3 - Head
-		glTranslated(init_x+60.0, init_y, 0.0);
+    glPushMatrix();											// Body segment 3 - Head
+		glTranslated(init_x+60.0, init_y, init_z);
     	glutWireSphere(25.0, 10, 10);
     glPopMatrix();
 
-    glBegin(GL_LINE_STRIP);						// Head leg segment
-    	glVertex3f(init_x+100.0, init_y+30.0, 0.0);
-    	glVertex3f(init_x+60.0, init_y, 0.0);
-    	glVertex3f(init_x+100.0, init_y-30.0, 0.0);
+    glBegin(GL_LINE_STRIP);									// Head leg segment
+    	glVertex3f(init_x+100.0, init_y+30.0, init_z);
+    	glVertex3f(init_x+60.0, init_y, init_z);
+    	glVertex3f(init_x+100.0, init_y-30.0, init_z);
     glEnd();
 }
 
-void DrawFood(float init_x, float init_y)
+void DrawFood(float init_x, float init_y, float init_z)
 {
-	glColor3f(0.0, 0.0, 0.0);
-	glPushMatrix();								// FOOD Cube
-		glTranslated(init_x, init_y+100.0, 0.0);
-    	glutWireCube(40.0);
+	glColor3f(1.0, 1.0, 0.0);
+	glPushMatrix();											// FOOD Cube
+		glTranslated(init_x, init_y, init_z);
+    	glutSolidCube(40.0);
     glPopMatrix();
 }
 
@@ -83,9 +83,9 @@ void DisplayEventHandler()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    DrawAnt(canvas_Width/2 + x_offset, canvas_Height/2 + y_offset);
+    DrawAnt((canvas_Width-100.0) + x_offset, canvas_Height/2 + y_offset, -200.0);
 
-	DrawFood(canvas_Width/2 + x_offset, canvas_Height/2 + y_offset);    
+	DrawFood(50.0, canvas_Height/2, -180.0);    
 
     glFlush();
 }
@@ -93,41 +93,43 @@ void DisplayEventHandler()
 void TimerEventHandler(int ID)
 {
     DisplayEventHandler();
-    
-    glutTimerFunc(100, TimerEventHandler, 1);
 }
 
 void KeyboardEventHandler(unsigned char key, int x, int y)
 {    
-	if (start_flag == false)
+	if (key == 'h')
 	{
-		glutTimerFunc(100, TimerEventHandler, 1);
-		start_flag = true;
-	}    
-    else
-    {
-    	if (key == 'h')
-    	{
-    		x_offset = 0;
-    	}    	
-    	else if (key == 'j')
-    	{
-    		x_offset = 0;
-    	}
-    	else if (key == 'u')
-    	{
-    		x_offset = 0;
-    	}
-    	else if (key == 'n')
-    	{
-    		x_offset = 0;
-    	}
-    }
+		x_offset -= 5.0;
+		glutTimerFunc(30.0, TimerEventHandler, 1);
+		x_offset -= 5.0;
+		glutTimerFunc(30.0, TimerEventHandler, 1);
+	}    	
+	else if (key == 'j')
+	{
+		x_offset += 5.0;
+		glutTimerFunc(30.0, TimerEventHandler, 1);
+		x_offset += 5.0;
+		glutTimerFunc(30.0, TimerEventHandler, 1);
+	}
+	else if (key == 'u')
+	{
+		y_offset += 5.0;
+		glutTimerFunc(30.0, TimerEventHandler, 1);
+		y_offset += 5.0;
+		glutTimerFunc(30.0, TimerEventHandler, 1);
+	}
+	else if (key == 'n')
+	{
+		y_offset -= 5.0;
+		glutTimerFunc(30.0, TimerEventHandler, 1);
+		y_offset -= 5.0;
+		glutTimerFunc(30.0, TimerEventHandler, 1);
+	}
 }
 
 void InitRendering()
 {
-    glClearColor(0.5, 1.0, 0.5, 1.0);	// set background to white
+    glClearColor(0.5, 1.0, 0.5, 1.0);	// set background to light green
     glLineWidth(1.0);					// set line width to 1
 }
 
@@ -143,8 +145,8 @@ int main (int argc, char ** argv)
     glutDisplayFunc(DisplayEventHandler);
     glutKeyboardFunc(KeyboardEventHandler);
 
-    std::cout << "Any Key Click Will Start." << std::endl;
-    std::cout << "Press R to reset the flock." << std::endl;
+    std::cout << "" << std::endl;
+    std::cout << "" << std::endl;
 
     glutMainLoop();
 
