@@ -24,7 +24,7 @@ void my_3d_projection(int width, int height)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     // the glOrtho() line may need to be changed 
-    glOrtho(0.0, width_bound, 0.0, height_bound, 0, 640.0);
+    glOrtho(-width_bound/2, width_bound/2, -height_bound/2, height_bound/2, 0, 640.0);
     glMatrixMode(GL_MODELVIEW);
     }
 

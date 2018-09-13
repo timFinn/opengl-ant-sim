@@ -21,7 +21,6 @@
 
 float x_offset;
 float y_offset;
-bool start_flag;
 
 void DrawAnt(float init_x, float init_y, float init_z)		// Ant is drawn from the center of its thorax
 {
@@ -77,15 +76,22 @@ void DrawFood(float init_x, float init_y, float init_z)
 		glTranslated(init_x, init_y, init_z);
     	glutSolidCube(40.0);
     glPopMatrix();
+
+    glColor3f(0.0, 0.0, 0.0);
+    glRasterPos3f(init_x-18.0, init_y, -130.0);
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, 'F');
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, 'O');
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, 'O');
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, 'D');
 }
 
 void DisplayEventHandler()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    DrawAnt((canvas_Width-100.0) + x_offset, canvas_Height/2 + y_offset, -200.0);
+    DrawAnt((canvas_Width/2 - 100.0) + x_offset, 0.0 + y_offset, -200.0);
 
-	DrawFood(50.0, canvas_Height/2, -180.0);    
+	DrawFood(-canvas_Width/2 + 100.0, 0.0, -180.0);    
 
     glFlush();
 }
@@ -135,8 +141,8 @@ void InitRendering()
 
 int main (int argc, char ** argv)
 {
-    x_offset = 0;
-    start_flag = false;
+    x_offset = 0.0;
+    y_offset = 0.0;
 
     glutInit(&argc, argv);    
     my_setup(canvas_Width, canvas_Height, canvas_Name);
