@@ -4,45 +4,71 @@
 
 	Software Architecture Statement
 	
-	This application is designed to 
+	This application is designed to draw an "ant" and a cube of "food" and provide the
+	user with controls to move the ant over to the food so it can eat. The ant is composed
+	of three wire spheres and several line segments. Every time the H, J, U, or N keys are
+	pressed, the ant will move left, right, up, or down respectively. The position of the
+	ant is updated for draw calls by incremented an offset value that is modified by the
+	KeyboardEventHandler function. Once the position of the ant plus it's accumulated offset
+	matches the position of the food cube, the victory condition is reached and the text
+	is drawn on the canvas.
+
+	In order to meet the requirements for the camera space, the glOrtho call in 
+	my_setup_3D_18.h was modified to build the world properly.
+
+
+	EXTRA CREDIT
+	(1) I have added the ability to change the color of the ant by creating a global integer
+	variable that represents the color to be used in the draw call. Each time the user presses
+	'c', the integer is incremented by 1, allowing the user to cycle through each color.
+
+
 
 ****/
 
 #include <GL/glut.h>
 #include <iostream>
-#include <cmath>
 
 #include "my_setup_3D_18.h"
 
 #define canvas_Width 640
 #define canvas_Height 640
 #define canvas_Name "CS 445 - Program 2"
-#define PI 3.14159265359
 
-float x_offset;
-float y_offset;
+float x_offset;									// Additive offset from original x position
+float y_offset;									// Additive offset from original y position
 
-float ant_x;
-float ant_y;
-float ant_z;
+float ant_x;									// x component of the ant position
+float ant_y;									// y component of the ant position
+float ant_z;									// z component of the ant position
 
-float food_x;
-float food_y;
-float food_z;
+int ant_color;
+
+float food_x;									// x component of the food position
+float food_y;									// y component of the food position
+float food_z;									// z component of the food position
 
 
 void DrawAnt(float x, float y, float z)			// Ant is drawn from the center of its thorax
 {
-	glColor3f(0.0, 0.0, 0.0);
+	if (ant_color == 0)
+	{
+		glColor3f(0.0, 0.0, 0.0);
+	}
+	else if (ant_color == 1)
+	{
+		glColor3f(1.0, 0.0, 0.0);
+	}	
+
 	glPushMatrix();								// Body segment 1 - Abdomen
 		glTranslated(x-60.0, y, z);
     	glutWireSphere(25.0, 20, 20);
     glPopMatrix();
 
     glBegin(GL_LINE_STRIP);						// Abdomen leg segment
-    	glVertex3f(x-100.0, y+30.0, z);
+    	glVertex3f(x-110.0, y+20.0, z);
     	glVertex3f(x-60.0, y, z);
-    	glVertex3f(x-100.0, y-30.0, z);
+    	glVertex3f(x-110.0, y-20.0, z);
     glEnd();
 
     glBegin(GL_LINES);							// Joining segment
@@ -72,18 +98,18 @@ void DrawAnt(float x, float y, float z)			// Ant is drawn from the center of its
     glPopMatrix();
 
     glBegin(GL_LINE_STRIP);						// Head leg segment
-    	glVertex3f(x+100.0, y+30.0, z);
+    	glVertex3f(x+110.0, y+20.0, z);
     	glVertex3f(x+60.0, y, z);
-    	glVertex3f(x+100.0, y-30.0, z);
+    	glVertex3f(x+110.0, y-20.0, z);
     glEnd();    
 }
 
 void DrawFood(float x, float y, float z)
 {
-	glColor3f(1.0, 1.0, 0.0);
-	glPushMatrix();								// FOOD Cube
-		glTranslated(x, y, z);
-    	glutWireCube(40.0);
+	glColor3f(1.0, 1.0, 0.0);					// Set color to "light yellow"
+	glPushMatrix();								// Push current matrix to save
+		glTranslated(x, y, z);					// Move draw coordinates 
+    	glutWireCube(40.0);						// Draw cube with x and y extent of 40
     glPopMatrix();
 
     glColor3f(0.0, 0.0, 0.0);
@@ -159,6 +185,21 @@ void KeyboardEventHandler(unsigned char key, int x, int y)
 		// y_offset -= 5.0;
 		// glutTimerFunc(30.0, TimerEventHandler, 1);
 	}
+	else if (key == 'c')
+	{
+		if(ant_color == 0)
+		{
+			ant_color++;
+			glutTimerFunc(30.0, TimerEventHandler, 1);
+		}
+		else if (ant_color == 1)
+		{
+			ant_color--;
+			glutTimerFunc(30.0, TimerEventHandler, 1);
+		}
+
+	}
+
 }
 
 void InitRendering()
