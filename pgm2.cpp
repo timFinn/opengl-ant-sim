@@ -28,6 +28,7 @@
 
 #include <GL/glut.h>
 #include <iostream>
+#include <cmath>
 
 #include "my_setup_3D_18.h"
 
@@ -42,7 +43,7 @@ float ant_x;									// x component of the ant position
 float ant_y;									// y component of the ant position
 float ant_z;									// z component of the ant position
 
-int ant_color;
+int ant_color;									// variable to hold color of ant
 
 float food_x;									// x component of the food position
 float food_y;									// y component of the food position
@@ -122,7 +123,12 @@ void DrawFood(float x, float y, float z)
 
 void CheckFood()
 {
-	if (ant_x + x_offset == food_x && ant_y + y_offset == food_y)
+	float distance = sqrt((((ant_x + x_offset) - food_x)*((ant_x + x_offset) - food_x)) + 
+						(((ant_y + y_offset) - food_y)*((ant_y + y_offset) - food_y)));
+
+	std::cout << distance << std::endl;
+
+	if (distance < 20.0)
 	{
 		glColor3f(0.0, 0.0, 0.0);
 	    glRasterPos3f(0.0, 0.0, 0.0);
@@ -150,40 +156,63 @@ void DisplayEventHandler()
     glFlush();
 }
 
+/*
+	The timer event handler is designed to use the timer ID to determine which offset to
+	modify in order to move the ant in the desired direction.
+*/
 void TimerEventHandler(int ID)
 {
-    DisplayEventHandler();
+	if (ID == 1)
+	{
+		x_offset -= 5.0;
+    	DisplayEventHandler();
+	}
+	else if (ID == 2)
+	{
+		x_offset += 5.0;
+    	DisplayEventHandler();
+	}
+	else if (ID == 3)
+	{
+		y_offset += 5.0;
+    	DisplayEventHandler();
+	}
+	else if (ID == 4)
+	{
+		y_offset -= 5.0;
+    	DisplayEventHandler();
+	}
+	else
+	{
+		DisplayEventHandler();
+	}
 }
 
+/*
+	The keyboard event handler is designed to identify the correct control inputs
+	and based on the key, call the timer twice with a 60ms delay.
+*/
 void KeyboardEventHandler(unsigned char key, int x, int y)
 {    
 	if (key == 'h')
 	{
-		x_offset -= 5.0;
-		glutTimerFunc(30.0, TimerEventHandler, 1);
-		// x_offset -= 5.0;
-		// glutTimerFunc(30.0, TimerEventHandler, 1);
+		glutTimerFunc(0.0, TimerEventHandler, 1);
+		glutTimerFunc(60.0, TimerEventHandler, 1);
 	}    	
 	else if (key == 'j')
 	{
-		x_offset += 5.0;
-		glutTimerFunc(30.0, TimerEventHandler, 1);
-		// x_offset += 5.0;
-		// glutTimerFunc(30.0, TimerEventHandler, 1);
+		glutTimerFunc(0.0, TimerEventHandler, 2);
+		glutTimerFunc(60.0, TimerEventHandler, 2);
 	}
 	else if (key == 'u')
 	{
-		y_offset += 5.0;
-		glutTimerFunc(30.0, TimerEventHandler, 1);
-		// y_offset += 5.0;
-		// glutTimerFunc(30.0, TimerEventHandler, 1);
+		glutTimerFunc(0.0, TimerEventHandler, 3);
+		glutTimerFunc(60.0, TimerEventHandler, 3);
 	}
 	else if (key == 'n')
 	{
-		y_offset -= 5.0;
-		glutTimerFunc(30.0, TimerEventHandler, 1);
-		// y_offset -= 5.0;
-		// glutTimerFunc(30.0, TimerEventHandler, 1);
+		glutTimerFunc(0.0, TimerEventHandler, 4);
+		glutTimerFunc(60.0, TimerEventHandler, 4);
 	}
 	else if (key == 'c')
 	{
@@ -197,9 +226,7 @@ void KeyboardEventHandler(unsigned char key, int x, int y)
 			ant_color--;
 			glutTimerFunc(30.0, TimerEventHandler, 1);
 		}
-
 	}
-
 }
 
 void InitRendering()
